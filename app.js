@@ -47,13 +47,14 @@ window.onload = function(){
             octopus.getAllCats().forEach((cat, id) => {
                 let liEle = document.createElement("li");
                 let anEle = document.createElement("a");
-                anEle.catId = id;
                 anEle.setAttribute("href", "");
                 anEle.innerHTML = cat.name;
-                anEle.onclick = function (e) { 
-                    octopus.listClick(this.catId);
-                    e.preventDefault();
-                 }
+                anEle.addEventListener("click", (function (catId) {
+                    return function (e) {
+                        octopus.listClick(catId);
+                        e.preventDefault();
+                    };
+                })(id));
                 liEle.appendChild(anEle);
                 this.catList.appendChild(liEle);
             });
@@ -72,7 +73,7 @@ window.onload = function(){
             this.render(0);
         },
         render: function (catId) {
-            let cat = octopus.getCatDetails(catId);console.log(cat)
+            let cat = octopus.getCatDetails(catId);
             this.picture.setAttribute("src", cat.picture);
             this.picture.catId = catId;
             this.count.innerHTML = "Count: " + cat.count;
